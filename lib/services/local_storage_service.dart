@@ -125,20 +125,20 @@ class LocalStorageService {
     // 5. WORKERS
     await db.execute('''
       CREATE TABLE workers (
-        worker_id TEXT PRIMARY KEY NOT NULL,
-        farm_id TEXT NOT NULL,
-        name TEXT NOT NULL,
-        nick_name TEXT,
-        gender TEXT CHECK(gender IN ('male', 'female', 'other')),
-        phone TEXT,
-        address TEXT,
-        join_date TEXT,
-        is_active INTEGER DEFAULT 1,
-        notes TEXT,
-        created_at TEXT NOT NULL,
-        updated_at TEXT NOT NULL,
-        FOREIGN KEY (farm_id) REFERENCES farms(farm_id) ON DELETE CASCADE
-      )
+  worker_id TEXT PRIMARY KEY NOT NULL,
+  farm_id TEXT NOT NULL,
+  name TEXT NOT NULL,
+  nick_name TEXT,
+  gender TEXT CHECK(gender IN ('male', 'female', 'other')),
+  phone TEXT,
+  address TEXT,
+  join_date TEXT,
+  is_active INTEGER DEFAULT 1,
+  notes TEXT,
+  created_at TEXT NOT NULL,
+  updated_at TEXT NOT NULL,
+  FOREIGN KEY (farm_id) REFERENCES farms(farm_id) ON DELETE CASCADE
+)
     ''');
     debugPrint('✅ workers table created');
 
@@ -495,20 +495,30 @@ class LocalStorageService {
     await db.execute('CREATE INDEX idx_workers_active ON workers(is_active)');
     await db.execute('CREATE INDEX idx_harvests_date ON harvests(date)');
     await db.execute('CREATE INDEX idx_harvests_crop ON harvests(crop_id)');
-    await db.execute('CREATE INDEX idx_harvest_workers_harvest ON harvest_workers(harvest_id)');
-    await db.execute('CREATE INDEX idx_harvest_workers_worker ON harvest_workers(worker_id)');
+    await db.execute(
+      'CREATE INDEX idx_harvest_workers_harvest ON harvest_workers(harvest_id)',
+    );
+    await db.execute(
+      'CREATE INDEX idx_harvest_workers_worker ON harvest_workers(worker_id)',
+    );
     await db.execute('CREATE INDEX idx_sales_date ON sales(sale_date)');
     await db.execute('CREATE INDEX idx_sales_dealer ON sales(dealer_id)');
     await db.execute('CREATE INDEX idx_sales_status ON sales(payment_status)');
     await db.execute('CREATE INDEX idx_sale_items_sale ON sale_items(sale_id)');
     await db.execute('CREATE INDEX idx_sale_items_crop ON sale_items(crop_id)');
     await db.execute('CREATE INDEX idx_inventory_farm ON inventory(farm_id)');
-    await db.execute('CREATE INDEX idx_inventory_category ON inventory(category)');
+    await db.execute(
+      'CREATE INDEX idx_inventory_category ON inventory(category)',
+    );
     await db.execute('CREATE INDEX idx_tools_farm ON tools(farm_id)');
     await db.execute('CREATE INDEX idx_tools_status ON tools(status)');
-    await db.execute('CREATE INDEX idx_transport_date ON transport_entries(date)');
+    await db.execute(
+      'CREATE INDEX idx_transport_date ON transport_entries(date)',
+    );
     await db.execute('CREATE INDEX idx_expenses_date ON other_expenses(date)');
-    await db.execute('CREATE INDEX idx_expenses_crop ON other_expenses(crop_id)');
+    await db.execute(
+      'CREATE INDEX idx_expenses_crop ON other_expenses(crop_id)',
+    );
 
     debugPrint('✅ All tables and indexes created successfully');
   }
@@ -521,7 +531,11 @@ class LocalStorageService {
     final db = await database;
     data['created_at'] = DateTime.now().toIso8601String();
     data['updated_at'] = DateTime.now().toIso8601String();
-    await db.insert('user_profile', data, conflictAlgorithm: ConflictAlgorithm.replace);
+    await db.insert(
+      'user_profile',
+      data,
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
   }
 
   Future<Map<String, dynamic>?> getUserProfile(String userId) async {
@@ -539,7 +553,10 @@ class LocalStorageService {
     return await db.query('user_profile');
   }
 
-  Future<void> updateUserProfile(String userId, Map<String, dynamic> data) async {
+  Future<void> updateUserProfile(
+    String userId,
+    Map<String, dynamic> data,
+  ) async {
     final db = await database;
     data['updated_at'] = DateTime.now().toIso8601String();
     await db.update(
@@ -563,7 +580,11 @@ class LocalStorageService {
     final db = await database;
     data['created_at'] = DateTime.now().toIso8601String();
     data['updated_at'] = DateTime.now().toIso8601String();
-    await db.insert('farms', data, conflictAlgorithm: ConflictAlgorithm.replace);
+    await db.insert(
+      'farms',
+      data,
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
   }
 
   Future<Map<String, dynamic>?> getFarm(String farmId) async {
@@ -594,12 +615,7 @@ class LocalStorageService {
   Future<void> updateFarm(String farmId, Map<String, dynamic> data) async {
     final db = await database;
     data['updated_at'] = DateTime.now().toIso8601String();
-    await db.update(
-      'farms',
-      data,
-      where: 'farm_id = ?',
-      whereArgs: [farmId],
-    );
+    await db.update('farms', data, where: 'farm_id = ?', whereArgs: [farmId]);
   }
 
   Future<void> deleteFarm(String farmId) async {
@@ -627,7 +643,10 @@ class LocalStorageService {
     };
   }
 
-  Future<void> updateFarmSettings(Map<String, dynamic> settings, String farmId) async {
+  Future<void> updateFarmSettings(
+    Map<String, dynamic> settings,
+    String farmId,
+  ) async {
     final db = await database;
     settings['updated_at'] = DateTime.now().toIso8601String();
     await db.update(
@@ -646,7 +665,11 @@ class LocalStorageService {
     final db = await database;
     data['created_at'] = DateTime.now().toIso8601String();
     data['updated_at'] = DateTime.now().toIso8601String();
-    await db.insert('crops', data, conflictAlgorithm: ConflictAlgorithm.replace);
+    await db.insert(
+      'crops',
+      data,
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
   }
 
   Future<Map<String, dynamic>?> getCrop(String cropId) async {
@@ -682,12 +705,7 @@ class LocalStorageService {
   Future<void> updateCrop(String cropId, Map<String, dynamic> data) async {
     final db = await database;
     data['updated_at'] = DateTime.now().toIso8601String();
-    await db.update(
-      'crops',
-      data,
-      where: 'crop_id = ?',
-      whereArgs: [cropId],
-    );
+    await db.update('crops', data, where: 'crop_id = ?', whereArgs: [cropId]);
   }
 
   Future<void> deleteCrop(String cropId) async {
@@ -703,7 +721,11 @@ class LocalStorageService {
     final db = await database;
     data['created_at'] = DateTime.now().toIso8601String();
     data['updated_at'] = DateTime.now().toIso8601String();
-    await db.insert('fields', data, conflictAlgorithm: ConflictAlgorithm.replace);
+    await db.insert(
+      'fields',
+      data,
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
   }
 
   Future<Map<String, dynamic>?> getField(String fieldId) async {
@@ -753,51 +775,141 @@ class LocalStorageService {
   }
 
   // ============================================
-  // WORKER CRUD
+  // WORKER CRUD (Fixed)
   // ============================================
 
   Future<void> insertWorker(Map<String, dynamic> data) async {
-    final db = await database;
-    data['created_at'] = DateTime.now().toIso8601String();
-    data['updated_at'] = DateTime.now().toIso8601String();
-    await db.insert('workers', data, conflictAlgorithm: ConflictAlgorithm.replace);
+    try {
+      final db = await database;
+      // Ensure all required fields exist
+      if (!data.containsKey('created_at')) {
+        data['created_at'] = DateTime.now().toIso8601String();
+      }
+      if (!data.containsKey('updated_at')) {
+        data['updated_at'] = DateTime.now().toIso8601String();
+      }
+      if (!data.containsKey('is_active')) {
+        data['is_active'] = 1;
+      }
+
+      await db.insert(
+        'workers',
+        data,
+        conflictAlgorithm: ConflictAlgorithm.replace,
+      );
+      debugPrint('✅ Worker inserted: ${data['name']}');
+    } catch (e) {
+      debugPrint('❌ insertWorker error: $e');
+      rethrow;
+    }
   }
 
   Future<Map<String, dynamic>?> getWorker(String workerId) async {
-    final db = await database;
-    final result = await db.query(
-      'workers',
-      where: 'worker_id = ?',
-      whereArgs: [workerId],
-    );
-    return result.isEmpty ? null : result.first;
+    try {
+      final db = await database;
+      final result = await db.query(
+        'workers',
+        where: 'worker_id = ?',
+        whereArgs: [workerId],
+      );
+      return result.isEmpty ? null : result.first;
+    } catch (e) {
+      debugPrint('❌ getWorker error: $e');
+      return null;
+    }
   }
 
-  Future<List<Map<String, dynamic>>> getWorkersByFarm(String farmId, {bool onlyActive = true}) async {
-    final db = await database;
-    final where = onlyActive ? 'farm_id = ? AND is_active = 1' : 'farm_id = ?';
-    return await db.query(
-      'workers',
-      where: where,
-      whereArgs: [farmId],
-      orderBy: 'name ASC',
-    );
+  Future<List<Map<String, dynamic>>> getWorkersByFarm(
+    String farmId, {
+    bool onlyActive = true,
+  }) async {
+    try {
+      final db = await database;
+      final where = onlyActive
+          ? 'farm_id = ? AND is_active = 1'
+          : 'farm_id = ?';
+      return await db.query(
+        'workers',
+        where: where,
+        whereArgs: [farmId],
+        orderBy: 'name ASC',
+      );
+    } catch (e) {
+      debugPrint('❌ getWorkersByFarm error: $e');
+      return [];
+    }
   }
 
   Future<void> updateWorker(String workerId, Map<String, dynamic> data) async {
-    final db = await database;
-    data['updated_at'] = DateTime.now().toIso8601String();
-    await db.update(
-      'workers',
-      data,
-      where: 'worker_id = ?',
-      whereArgs: [workerId],
-    );
+    try {
+      final db = await database;
+      data['updated_at'] = DateTime.now().toIso8601String();
+      await db.update(
+        'workers',
+        data,
+        where: 'worker_id = ?',
+        whereArgs: [workerId],
+      );
+    } catch (e) {
+      debugPrint('❌ updateWorker error: $e');
+      rethrow;
+    }
   }
 
   Future<void> deleteWorker(String workerId) async {
-    final db = await database;
-    await db.delete('workers', where: 'worker_id = ?', whereArgs: [workerId]);
+    try {
+      final db = await database;
+      await db.delete('workers', where: 'worker_id = ?', whereArgs: [workerId]);
+    } catch (e) {
+      debugPrint('❌ deleteWorker error: $e');
+      rethrow;
+    }
+  }
+
+  // Check if worker exists by name
+  Future<Map<String, dynamic>?> findWorkerByName(
+    String farmId,
+    String name,
+  ) async {
+    try {
+      final db = await database;
+      final result = await db.query(
+        'workers',
+        where: 'farm_id = ? AND name = ? AND is_active = 1',
+        whereArgs: [farmId, name.trim()],
+      );
+      return result.isEmpty ? null : result.first;
+    } catch (e) {
+      debugPrint('❌ findWorkerByName error: $e');
+      return null;
+    }
+  }
+
+  // Search workers by name (for suggestions)
+  Future<List<Map<String, dynamic>>> searchWorkers(
+    String farmId,
+    String query,
+  ) async {
+    try {
+      final db = await database;
+      if (query.isEmpty) {
+        return await getWorkersByFarm(farmId);
+      }
+      return await db.rawQuery(
+        '''
+      SELECT * FROM workers 
+      WHERE farm_id = ? 
+      AND is_active = 1 
+      AND (name LIKE ? OR nick_name LIKE ?)
+      ORDER BY name ASC
+      LIMIT 10
+    ''',
+        [farmId, '%$query%', '%$query%'],
+      );
+    } catch (e) {
+      debugPrint('❌ searchWorkers error: $e');
+      return [];
+    }
   }
 
   // ============================================
@@ -808,10 +920,16 @@ class LocalStorageService {
     final db = await database;
     data['created_at'] = DateTime.now().toIso8601String();
     data['updated_at'] = DateTime.now().toIso8601String();
-    await db.insert('worker_payment_settings', data, conflictAlgorithm: ConflictAlgorithm.replace);
+    await db.insert(
+      'worker_payment_settings',
+      data,
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
   }
 
-  Future<Map<String, dynamic>?> getWorkerPaymentSetting(String settingId) async {
+  Future<Map<String, dynamic>?> getWorkerPaymentSetting(
+    String settingId,
+  ) async {
     final db = await database;
     final result = await db.query(
       'worker_payment_settings',
@@ -821,7 +939,9 @@ class LocalStorageService {
     return result.isEmpty ? null : result.first;
   }
 
-  Future<List<Map<String, dynamic>>> getWorkerPaymentSettingsByWorker(String workerId) async {
+  Future<List<Map<String, dynamic>>> getWorkerPaymentSettingsByWorker(
+    String workerId,
+  ) async {
     final db = await database;
     return await db.query(
       'worker_payment_settings',
@@ -830,7 +950,10 @@ class LocalStorageService {
     );
   }
 
-  Future<void> updateWorkerPaymentSetting(String settingId, Map<String, dynamic> data) async {
+  Future<void> updateWorkerPaymentSetting(
+    String settingId,
+    Map<String, dynamic> data,
+  ) async {
     final db = await database;
     data['updated_at'] = DateTime.now().toIso8601String();
     await db.update(
@@ -843,7 +966,11 @@ class LocalStorageService {
 
   Future<void> deleteWorkerPaymentSetting(String settingId) async {
     final db = await database;
-    await db.delete('worker_payment_settings', where: 'setting_id = ?', whereArgs: [settingId]);
+    await db.delete(
+      'worker_payment_settings',
+      where: 'setting_id = ?',
+      whereArgs: [settingId],
+    );
   }
 
   // ============================================
@@ -854,7 +981,11 @@ class LocalStorageService {
     final db = await database;
     data['created_at'] = DateTime.now().toIso8601String();
     data['updated_at'] = DateTime.now().toIso8601String();
-    await db.insert('labor_activities', data, conflictAlgorithm: ConflictAlgorithm.replace);
+    await db.insert(
+      'labor_activities',
+      data,
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
   }
 
   Future<Map<String, dynamic>?> getLaborActivity(String activityId) async {
@@ -867,7 +998,9 @@ class LocalStorageService {
     return result.isEmpty ? null : result.first;
   }
 
-  Future<List<Map<String, dynamic>>> getLaborActivitiesByFarm(String farmId) async {
+  Future<List<Map<String, dynamic>>> getLaborActivitiesByFarm(
+    String farmId,
+  ) async {
     final db = await database;
     return await db.query(
       'labor_activities',
@@ -877,7 +1010,9 @@ class LocalStorageService {
     );
   }
 
-  Future<List<Map<String, dynamic>>> getLaborActivitiesByWorker(String workerId) async {
+  Future<List<Map<String, dynamic>>> getLaborActivitiesByWorker(
+    String workerId,
+  ) async {
     final db = await database;
     return await db.query(
       'labor_activities',
@@ -887,7 +1022,10 @@ class LocalStorageService {
     );
   }
 
-  Future<void> updateLaborActivity(String activityId, Map<String, dynamic> data) async {
+  Future<void> updateLaborActivity(
+    String activityId,
+    Map<String, dynamic> data,
+  ) async {
     final db = await database;
     data['updated_at'] = DateTime.now().toIso8601String();
     await db.update(
@@ -900,7 +1038,11 @@ class LocalStorageService {
 
   Future<void> deleteLaborActivity(String activityId) async {
     final db = await database;
-    await db.delete('labor_activities', where: 'activity_id = ?', whereArgs: [activityId]);
+    await db.delete(
+      'labor_activities',
+      where: 'activity_id = ?',
+      whereArgs: [activityId],
+    );
   }
 
   // ============================================
@@ -911,7 +1053,11 @@ class LocalStorageService {
     final db = await database;
     data['created_at'] = DateTime.now().toIso8601String();
     data['updated_at'] = DateTime.now().toIso8601String();
-    await db.insert('harvests', data, conflictAlgorithm: ConflictAlgorithm.replace);
+    await db.insert(
+      'harvests',
+      data,
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
   }
 
   Future<Map<String, dynamic>?> getHarvest(String harvestId) async {
@@ -944,7 +1090,11 @@ class LocalStorageService {
     );
   }
 
-  Future<List<Map<String, dynamic>>> getHarvestsByDateRange(String farmId, String startDate, String endDate) async {
+  Future<List<Map<String, dynamic>>> getHarvestsByDateRange(
+    String farmId,
+    String startDate,
+    String endDate,
+  ) async {
     final db = await database;
     return await db.query(
       'harvests',
@@ -954,7 +1104,10 @@ class LocalStorageService {
     );
   }
 
-  Future<void> updateHarvest(String harvestId, Map<String, dynamic> data) async {
+  Future<void> updateHarvest(
+    String harvestId,
+    Map<String, dynamic> data,
+  ) async {
     final db = await database;
     data['updated_at'] = DateTime.now().toIso8601String();
     await db.update(
@@ -967,7 +1120,11 @@ class LocalStorageService {
 
   Future<void> deleteHarvest(String harvestId) async {
     final db = await database;
-    await db.delete('harvests', where: 'harvest_id = ?', whereArgs: [harvestId]);
+    await db.delete(
+      'harvests',
+      where: 'harvest_id = ?',
+      whereArgs: [harvestId],
+    );
   }
 
   // ============================================
@@ -978,10 +1135,16 @@ class LocalStorageService {
     final db = await database;
     data['created_at'] = DateTime.now().toIso8601String();
     data['updated_at'] = DateTime.now().toIso8601String();
-    await db.insert('harvest_workers', data, conflictAlgorithm: ConflictAlgorithm.replace);
+    await db.insert(
+      'harvest_workers',
+      data,
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
   }
 
-  Future<List<Map<String, dynamic>>> getHarvestWorkersByHarvest(String harvestId) async {
+  Future<List<Map<String, dynamic>>> getHarvestWorkersByHarvest(
+    String harvestId,
+  ) async {
     final db = await database;
     return await db.query(
       'harvest_workers',
@@ -990,7 +1153,9 @@ class LocalStorageService {
     );
   }
 
-  Future<List<Map<String, dynamic>>> getHarvestWorkersByWorker(String workerId) async {
+  Future<List<Map<String, dynamic>>> getHarvestWorkersByWorker(
+    String workerId,
+  ) async {
     final db = await database;
     return await db.query(
       'harvest_workers',
@@ -1002,12 +1167,7 @@ class LocalStorageService {
   Future<void> updateHarvestWorker(String id, Map<String, dynamic> data) async {
     final db = await database;
     data['updated_at'] = DateTime.now().toIso8601String();
-    await db.update(
-      'harvest_workers',
-      data,
-      where: 'id = ?',
-      whereArgs: [id],
-    );
+    await db.update('harvest_workers', data, where: 'id = ?', whereArgs: [id]);
   }
 
   Future<void> deleteHarvestWorker(String id) async {
@@ -1017,7 +1177,11 @@ class LocalStorageService {
 
   Future<void> deleteHarvestWorkersByHarvest(String harvestId) async {
     final db = await database;
-    await db.delete('harvest_workers', where: 'harvest_id = ?', whereArgs: [harvestId]);
+    await db.delete(
+      'harvest_workers',
+      where: 'harvest_id = ?',
+      whereArgs: [harvestId],
+    );
   }
 
   // ============================================
@@ -1028,7 +1192,11 @@ class LocalStorageService {
     final db = await database;
     data['created_at'] = DateTime.now().toIso8601String();
     data['updated_at'] = DateTime.now().toIso8601String();
-    await db.insert('dealers', data, conflictAlgorithm: ConflictAlgorithm.replace);
+    await db.insert(
+      'dealers',
+      data,
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
   }
 
   Future<Map<String, dynamic>?> getDealer(String dealerId) async {
@@ -1041,7 +1209,10 @@ class LocalStorageService {
     return result.isEmpty ? null : result.first;
   }
 
-  Future<List<Map<String, dynamic>>> getDealersByFarm(String farmId, {bool onlyActive = true}) async {
+  Future<List<Map<String, dynamic>>> getDealersByFarm(
+    String farmId, {
+    bool onlyActive = true,
+  }) async {
     final db = await database;
     final where = onlyActive ? 'farm_id = ? AND is_active = 1' : 'farm_id = ?';
     return await db.query(
@@ -1076,7 +1247,11 @@ class LocalStorageService {
     final db = await database;
     data['created_at'] = DateTime.now().toIso8601String();
     data['updated_at'] = DateTime.now().toIso8601String();
-    await db.insert('sales', data, conflictAlgorithm: ConflictAlgorithm.replace);
+    await db.insert(
+      'sales',
+      data,
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
   }
 
   Future<Map<String, dynamic>?> getSale(String saleId) async {
@@ -1099,7 +1274,11 @@ class LocalStorageService {
     );
   }
 
-  Future<List<Map<String, dynamic>>> getSalesByDateRange(String farmId, String startDate, String endDate) async {
+  Future<List<Map<String, dynamic>>> getSalesByDateRange(
+    String farmId,
+    String startDate,
+    String endDate,
+  ) async {
     final db = await database;
     return await db.query(
       'sales',
@@ -1122,12 +1301,7 @@ class LocalStorageService {
   Future<void> updateSale(String saleId, Map<String, dynamic> data) async {
     final db = await database;
     data['updated_at'] = DateTime.now().toIso8601String();
-    await db.update(
-      'sales',
-      data,
-      where: 'sale_id = ?',
-      whereArgs: [saleId],
-    );
+    await db.update('sales', data, where: 'sale_id = ?', whereArgs: [saleId]);
   }
 
   Future<void> deleteSale(String saleId) async {
@@ -1143,7 +1317,11 @@ class LocalStorageService {
     final db = await database;
     data['created_at'] = DateTime.now().toIso8601String();
     data['updated_at'] = DateTime.now().toIso8601String();
-    await db.insert('sale_items', data, conflictAlgorithm: ConflictAlgorithm.replace);
+    await db.insert(
+      'sale_items',
+      data,
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
   }
 
   Future<List<Map<String, dynamic>>> getSaleItemsBySale(String saleId) async {
@@ -1184,7 +1362,11 @@ class LocalStorageService {
     final db = await database;
     data['created_at'] = DateTime.now().toIso8601String();
     data['updated_at'] = DateTime.now().toIso8601String();
-    await db.insert('payments', data, conflictAlgorithm: ConflictAlgorithm.replace);
+    await db.insert(
+      'payments',
+      data,
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
   }
 
   Future<List<Map<String, dynamic>>> getPaymentsBySale(String saleId) async {
@@ -1206,7 +1388,10 @@ class LocalStorageService {
     return result.first['total'] as double? ?? 0;
   }
 
-  Future<void> updatePayment(String paymentId, Map<String, dynamic> data) async {
+  Future<void> updatePayment(
+    String paymentId,
+    Map<String, dynamic> data,
+  ) async {
     final db = await database;
     data['updated_at'] = DateTime.now().toIso8601String();
     await db.update(
@@ -1219,7 +1404,11 @@ class LocalStorageService {
 
   Future<void> deletePayment(String paymentId) async {
     final db = await database;
-    await db.delete('payments', where: 'payment_id = ?', whereArgs: [paymentId]);
+    await db.delete(
+      'payments',
+      where: 'payment_id = ?',
+      whereArgs: [paymentId],
+    );
   }
 
   // ============================================
@@ -1230,7 +1419,11 @@ class LocalStorageService {
     final db = await database;
     data['created_at'] = DateTime.now().toIso8601String();
     data['updated_at'] = DateTime.now().toIso8601String();
-    await db.insert('inventory', data, conflictAlgorithm: ConflictAlgorithm.replace);
+    await db.insert(
+      'inventory',
+      data,
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
   }
 
   Future<Map<String, dynamic>?> getInventoryItem(String itemId) async {
@@ -1253,7 +1446,10 @@ class LocalStorageService {
     );
   }
 
-  Future<List<Map<String, dynamic>>> getInventoryByCategory(String farmId, String category) async {
+  Future<List<Map<String, dynamic>>> getInventoryByCategory(
+    String farmId,
+    String category,
+  ) async {
     final db = await database;
     return await db.query(
       'inventory',
@@ -1267,13 +1463,17 @@ class LocalStorageService {
     final db = await database;
     return await db.query(
       'inventory',
-      where: 'farm_id = ? AND quantity <= min_stock_alert AND min_stock_alert > 0',
+      where:
+          'farm_id = ? AND quantity <= min_stock_alert AND min_stock_alert > 0',
       whereArgs: [farmId],
       orderBy: 'quantity ASC',
     );
   }
 
-  Future<void> updateInventoryItem(String itemId, Map<String, dynamic> data) async {
+  Future<void> updateInventoryItem(
+    String itemId,
+    Map<String, dynamic> data,
+  ) async {
     final db = await database;
     data['updated_at'] = DateTime.now().toIso8601String();
     await db.update(
@@ -1289,7 +1489,10 @@ class LocalStorageService {
     await db.delete('inventory', where: 'item_id = ?', whereArgs: [itemId]);
   }
 
-  Future<void> updateInventoryStock(String itemId, double quantityChange) async {
+  Future<void> updateInventoryStock(
+    String itemId,
+    double quantityChange,
+  ) async {
     final db = await database;
     final item = await getInventoryItem(itemId);
     if (item != null) {
@@ -1313,10 +1516,16 @@ class LocalStorageService {
   Future<void> insertInventoryCropAssignment(Map<String, dynamic> data) async {
     final db = await database;
     data['created_at'] = DateTime.now().toIso8601String();
-    await db.insert('inventory_crop_assignments', data, conflictAlgorithm: ConflictAlgorithm.replace);
+    await db.insert(
+      'inventory_crop_assignments',
+      data,
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
   }
 
-  Future<List<Map<String, dynamic>>> getCropAssignmentsByItem(String itemId) async {
+  Future<List<Map<String, dynamic>>> getCropAssignmentsByItem(
+    String itemId,
+  ) async {
     final db = await database;
     return await db.query(
       'inventory_crop_assignments',
@@ -1327,7 +1536,11 @@ class LocalStorageService {
 
   Future<void> deleteCropAssignment(String id) async {
     final db = await database;
-    await db.delete('inventory_crop_assignments', where: 'id = ?', whereArgs: [id]);
+    await db.delete(
+      'inventory_crop_assignments',
+      where: 'id = ?',
+      whereArgs: [id],
+    );
   }
 
   // ============================================
@@ -1338,15 +1551,21 @@ class LocalStorageService {
     final db = await database;
     data['created_at'] = DateTime.now().toIso8601String();
     data['updated_at'] = DateTime.now().toIso8601String();
-    await db.insert('inventory_usage', data, conflictAlgorithm: ConflictAlgorithm.replace);
-    
+    await db.insert(
+      'inventory_usage',
+      data,
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
+
     // Update stock
     final itemId = data['item_id'] as String;
     final quantityUsed = (data['quantity_used'] as num).toDouble();
     await updateInventoryStock(itemId, -quantityUsed);
   }
 
-  Future<List<Map<String, dynamic>>> getInventoryUsageByItem(String itemId) async {
+  Future<List<Map<String, dynamic>>> getInventoryUsageByItem(
+    String itemId,
+  ) async {
     final db = await database;
     return await db.query(
       'inventory_usage',
@@ -1358,7 +1577,11 @@ class LocalStorageService {
 
   Future<void> deleteInventoryUsage(String usageId) async {
     final db = await database;
-    await db.delete('inventory_usage', where: 'usage_id = ?', whereArgs: [usageId]);
+    await db.delete(
+      'inventory_usage',
+      where: 'usage_id = ?',
+      whereArgs: [usageId],
+    );
   }
 
   // ============================================
@@ -1369,7 +1592,11 @@ class LocalStorageService {
     final db = await database;
     data['created_at'] = DateTime.now().toIso8601String();
     data['updated_at'] = DateTime.now().toIso8601String();
-    await db.insert('purchases', data, conflictAlgorithm: ConflictAlgorithm.replace);
+    await db.insert(
+      'purchases',
+      data,
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
   }
 
   Future<Map<String, dynamic>?> getPurchase(String purchaseId) async {
@@ -1392,7 +1619,10 @@ class LocalStorageService {
     );
   }
 
-  Future<void> updatePurchase(String purchaseId, Map<String, dynamic> data) async {
+  Future<void> updatePurchase(
+    String purchaseId,
+    Map<String, dynamic> data,
+  ) async {
     final db = await database;
     data['updated_at'] = DateTime.now().toIso8601String();
     await db.update(
@@ -1405,7 +1635,11 @@ class LocalStorageService {
 
   Future<void> deletePurchase(String purchaseId) async {
     final db = await database;
-    await db.delete('purchases', where: 'purchase_id = ?', whereArgs: [purchaseId]);
+    await db.delete(
+      'purchases',
+      where: 'purchase_id = ?',
+      whereArgs: [purchaseId],
+    );
   }
 
   // ============================================
@@ -1416,15 +1650,21 @@ class LocalStorageService {
     final db = await database;
     data['created_at'] = DateTime.now().toIso8601String();
     data['updated_at'] = DateTime.now().toIso8601String();
-    await db.insert('purchase_items', data, conflictAlgorithm: ConflictAlgorithm.replace);
-    
+    await db.insert(
+      'purchase_items',
+      data,
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
+
     // Update inventory stock
     final itemId = data['item_id'] as String;
     final quantity = (data['quantity'] as num).toDouble();
     await updateInventoryStock(itemId, quantity);
   }
 
-  Future<List<Map<String, dynamic>>> getPurchaseItemsByPurchase(String purchaseId) async {
+  Future<List<Map<String, dynamic>>> getPurchaseItemsByPurchase(
+    String purchaseId,
+  ) async {
     final db = await database;
     return await db.query(
       'purchase_items',
@@ -1440,7 +1680,11 @@ class LocalStorageService {
 
   Future<void> deletePurchaseItemsByPurchase(String purchaseId) async {
     final db = await database;
-    await db.delete('purchase_items', where: 'purchase_id = ?', whereArgs: [purchaseId]);
+    await db.delete(
+      'purchase_items',
+      where: 'purchase_id = ?',
+      whereArgs: [purchaseId],
+    );
   }
 
   // ============================================
@@ -1451,7 +1695,11 @@ class LocalStorageService {
     final db = await database;
     data['created_at'] = DateTime.now().toIso8601String();
     data['updated_at'] = DateTime.now().toIso8601String();
-    await db.insert('tools', data, conflictAlgorithm: ConflictAlgorithm.replace);
+    await db.insert(
+      'tools',
+      data,
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
   }
 
   Future<Map<String, dynamic>?> getTool(String toolId) async {
@@ -1474,7 +1722,10 @@ class LocalStorageService {
     );
   }
 
-  Future<List<Map<String, dynamic>>> getToolsByStatus(String farmId, String status) async {
+  Future<List<Map<String, dynamic>>> getToolsByStatus(
+    String farmId,
+    String status,
+  ) async {
     final db = await database;
     return await db.query(
       'tools',
@@ -1487,12 +1738,7 @@ class LocalStorageService {
   Future<void> updateTool(String toolId, Map<String, dynamic> data) async {
     final db = await database;
     data['updated_at'] = DateTime.now().toIso8601String();
-    await db.update(
-      'tools',
-      data,
-      where: 'tool_id = ?',
-      whereArgs: [toolId],
-    );
+    await db.update('tools', data, where: 'tool_id = ?', whereArgs: [toolId]);
   }
 
   Future<void> deleteTool(String toolId) async {
@@ -1507,10 +1753,16 @@ class LocalStorageService {
   Future<void> insertToolCropAssignment(Map<String, dynamic> data) async {
     final db = await database;
     data['created_at'] = DateTime.now().toIso8601String();
-    await db.insert('tool_crop_assignments', data, conflictAlgorithm: ConflictAlgorithm.replace);
+    await db.insert(
+      'tool_crop_assignments',
+      data,
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
   }
 
-  Future<List<Map<String, dynamic>>> getToolCropAssignmentsByTool(String toolId) async {
+  Future<List<Map<String, dynamic>>> getToolCropAssignmentsByTool(
+    String toolId,
+  ) async {
     final db = await database;
     return await db.query(
       'tool_crop_assignments',
@@ -1532,10 +1784,16 @@ class LocalStorageService {
     final db = await database;
     data['created_at'] = DateTime.now().toIso8601String();
     data['updated_at'] = DateTime.now().toIso8601String();
-    await db.insert('tool_maintenance', data, conflictAlgorithm: ConflictAlgorithm.replace);
+    await db.insert(
+      'tool_maintenance',
+      data,
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
   }
 
-  Future<List<Map<String, dynamic>>> getToolMaintenanceByTool(String toolId) async {
+  Future<List<Map<String, dynamic>>> getToolMaintenanceByTool(
+    String toolId,
+  ) async {
     final db = await database;
     return await db.query(
       'tool_maintenance',
@@ -1545,7 +1803,10 @@ class LocalStorageService {
     );
   }
 
-  Future<void> updateToolMaintenance(String maintenanceId, Map<String, dynamic> data) async {
+  Future<void> updateToolMaintenance(
+    String maintenanceId,
+    Map<String, dynamic> data,
+  ) async {
     final db = await database;
     data['updated_at'] = DateTime.now().toIso8601String();
     await db.update(
@@ -1558,7 +1819,11 @@ class LocalStorageService {
 
   Future<void> deleteToolMaintenance(String maintenanceId) async {
     final db = await database;
-    await db.delete('tool_maintenance', where: 'maintenance_id = ?', whereArgs: [maintenanceId]);
+    await db.delete(
+      'tool_maintenance',
+      where: 'maintenance_id = ?',
+      whereArgs: [maintenanceId],
+    );
   }
 
   // ============================================
@@ -1569,10 +1834,16 @@ class LocalStorageService {
     final db = await database;
     data['created_at'] = DateTime.now().toIso8601String();
     data['updated_at'] = DateTime.now().toIso8601String();
-    await db.insert('transport_entries', data, conflictAlgorithm: ConflictAlgorithm.replace);
+    await db.insert(
+      'transport_entries',
+      data,
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
   }
 
-  Future<List<Map<String, dynamic>>> getTransportEntriesByFarm(String farmId) async {
+  Future<List<Map<String, dynamic>>> getTransportEntriesByFarm(
+    String farmId,
+  ) async {
     final db = await database;
     return await db.query(
       'transport_entries',
@@ -1582,7 +1853,11 @@ class LocalStorageService {
     );
   }
 
-  Future<double> getTotalTransportCost(String farmId, String startDate, String endDate) async {
+  Future<double> getTotalTransportCost(
+    String farmId,
+    String startDate,
+    String endDate,
+  ) async {
     final db = await database;
     final result = await db.rawQuery(
       'SELECT SUM(total_cost) as total FROM transport_entries WHERE farm_id = ? AND date BETWEEN ? AND ?',
@@ -1591,7 +1866,10 @@ class LocalStorageService {
     return result.first['total'] as double? ?? 0;
   }
 
-  Future<void> updateTransportEntry(String id, Map<String, dynamic> data) async {
+  Future<void> updateTransportEntry(
+    String id,
+    Map<String, dynamic> data,
+  ) async {
     final db = await database;
     data['updated_at'] = DateTime.now().toIso8601String();
     await db.update(
@@ -1615,10 +1893,16 @@ class LocalStorageService {
     final db = await database;
     data['created_at'] = DateTime.now().toIso8601String();
     data['updated_at'] = DateTime.now().toIso8601String();
-    await db.insert('other_expenses', data, conflictAlgorithm: ConflictAlgorithm.replace);
+    await db.insert(
+      'other_expenses',
+      data,
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
   }
 
-  Future<List<Map<String, dynamic>>> getOtherExpensesByFarm(String farmId) async {
+  Future<List<Map<String, dynamic>>> getOtherExpensesByFarm(
+    String farmId,
+  ) async {
     final db = await database;
     return await db.query(
       'other_expenses',
@@ -1628,7 +1912,9 @@ class LocalStorageService {
     );
   }
 
-  Future<List<Map<String, dynamic>>> getOtherExpensesByCrop(String cropId) async {
+  Future<List<Map<String, dynamic>>> getOtherExpensesByCrop(
+    String cropId,
+  ) async {
     final db = await database;
     return await db.query(
       'other_expenses',
@@ -1638,7 +1924,11 @@ class LocalStorageService {
     );
   }
 
-  Future<double> getTotalOtherExpenses(String farmId, String startDate, String endDate) async {
+  Future<double> getTotalOtherExpenses(
+    String farmId,
+    String startDate,
+    String endDate,
+  ) async {
     final db = await database;
     final result = await db.rawQuery(
       'SELECT SUM(amount) as total FROM other_expenses WHERE farm_id = ? AND date BETWEEN ? AND ?',
@@ -1647,7 +1937,10 @@ class LocalStorageService {
     return result.first['total'] as double? ?? 0;
   }
 
-  Future<void> updateOtherExpense(String expenseId, Map<String, dynamic> data) async {
+  Future<void> updateOtherExpense(
+    String expenseId,
+    Map<String, dynamic> data,
+  ) async {
     final db = await database;
     data['updated_at'] = DateTime.now().toIso8601String();
     await db.update(
@@ -1660,7 +1953,11 @@ class LocalStorageService {
 
   Future<void> deleteOtherExpense(String expenseId) async {
     final db = await database;
-    await db.delete('other_expenses', where: 'expense_id = ?', whereArgs: [expenseId]);
+    await db.delete(
+      'other_expenses',
+      where: 'expense_id = ?',
+      whereArgs: [expenseId],
+    );
   }
 
   // ============================================
@@ -1689,11 +1986,20 @@ class LocalStorageService {
     String? where,
     List<dynamic>? whereArgs,
   }) async {
-    final results = await query(table, where: where, whereArgs: whereArgs, limit: 1);
+    final results = await query(
+      table,
+      where: where,
+      whereArgs: whereArgs,
+      limit: 1,
+    );
     return results.isEmpty ? null : results.first;
   }
 
-  Future<int> count(String table, {String? where, List<dynamic>? whereArgs}) async {
+  Future<int> count(
+    String table, {
+    String? where,
+    List<dynamic>? whereArgs,
+  }) async {
     final db = await database;
     final result = await db.query(
       table,
@@ -1716,13 +2022,29 @@ class LocalStorageService {
   Future<void> clearAllData() async {
     final db = await database;
     final tables = [
-      'user_profile', 'farms', 'crops', 'fields', 'workers',
-      'worker_payment_settings', 'labor_activities', 'harvests',
-      'harvest_workers', 'dealers', 'sales', 'sale_items',
-      'payments', 'inventory', 'inventory_crop_assignments',
-      'inventory_usage', 'purchases', 'purchase_items',
-      'tools', 'tool_crop_assignments', 'tool_maintenance',
-      'transport_entries', 'other_expenses'
+      'user_profile',
+      'farms',
+      'crops',
+      'fields',
+      'workers',
+      'worker_payment_settings',
+      'labor_activities',
+      'harvests',
+      'harvest_workers',
+      'dealers',
+      'sales',
+      'sale_items',
+      'payments',
+      'inventory',
+      'inventory_crop_assignments',
+      'inventory_usage',
+      'purchases',
+      'purchase_items',
+      'tools',
+      'tool_crop_assignments',
+      'tool_maintenance',
+      'transport_entries',
+      'other_expenses',
     ];
     for (final table in tables) {
       await db.delete(table);
