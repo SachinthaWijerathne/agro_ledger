@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "715596684136",
+    "project_id": "agro-ledger-app",
+    "storage_bucket": "agro-ledger-app.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:715596684136:android:c58bad8078ea78969154dd",
+        "android_client_info": {
+          "package_name": "com.example.agro_ledger"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "715596684136-qkg7ckl3rsd4gq94fi9ccrdc9rf3k8ab.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAf7NG1tYaik3HeuWnlXhOrMV30scaUmvA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "715596684136-qkg7ckl3rsd4gq94fi9ccrdc9rf3k8ab.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
