@@ -255,7 +255,7 @@ if (_crops.isNotEmpty) {
           (w) => w['worker_id'] == workerId,
           orElse: () => {'name': _workerNameController.text},
         )['name'];
-        description = 'Daily wage - ${_maintenanceType.replaceAll('_', ' ').toUpperCase()} - $workerName (${hours}h @ ₹$_dailyWageRate/h)';
+        description = 'Daily wage - ${_maintenanceType.replaceAll('_', ' ').toUpperCase()} - $workerName (${hours}h @ Rs$_dailyWageRate/h)';
       } else {
         amount = double.parse(_contractAmountController.text);
         description = _contractDescriptionController.text;
@@ -358,7 +358,7 @@ if (_crops.isNotEmpty) {
                     borderRadius: BorderRadius.circular(12),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.05),
+                        color: Colors.black.withValues(alpha: 0.05),
                         blurRadius: 5,
                       ),
                     ],
@@ -404,7 +404,7 @@ if (_crops.isNotEmpty) {
                     borderRadius: BorderRadius.circular(12),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.05),
+                        color: Colors.black.withValues(alpha: 0.05),
                         blurRadius: 5,
                       ),
                     ],
@@ -454,7 +454,7 @@ if (_crops.isNotEmpty) {
                     borderRadius: BorderRadius.circular(12),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.05),
+                        color: Colors.black.withValues(alpha: 0.05),
                         blurRadius: 5,
                       ),
                     ],
@@ -501,7 +501,7 @@ if (_crops.isNotEmpty) {
                     borderRadius: BorderRadius.circular(12),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.05),
+                        color: Colors.black.withValues(alpha: 0.05),
                         blurRadius: 5,
                       ),
                     ],
@@ -551,7 +551,7 @@ if (_crops.isNotEmpty) {
                     borderRadius: BorderRadius.circular(12),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.05),
+                        color: Colors.black.withValues(alpha: 0.05),
                         blurRadius: 5,
                       ),
                     ],
@@ -615,7 +615,7 @@ if (_crops.isNotEmpty) {
                                     borderRadius: BorderRadius.circular(8),
                                     boxShadow: [
                                       BoxShadow(
-                                        color: Colors.black.withOpacity(0.1),
+                                        color: Colors.black.withValues(alpha: 0.1),
                                         blurRadius: 10,
                                       ),
                                     ],
@@ -629,7 +629,7 @@ if (_crops.isNotEmpty) {
                                         dense: true,
                                         leading: CircleAvatar(
                                           radius: 14,
-                                          backgroundColor: const Color(0xFF1565C0).withOpacity(0.1),
+                                          backgroundColor: const Color(0xFF1565C0).withValues(alpha: 0.1),
                                           child: Text(
                                             (worker['name'] as String).substring(0, 1).toUpperCase(),
                                             style: const TextStyle(
@@ -687,7 +687,7 @@ if (_crops.isNotEmpty) {
                             children: [
                               const Text('Rate per hour:'),
                               Text(
-                                '₹$_dailyWageRate',
+                                'Rs$_dailyWageRate',
                                 style: const TextStyle(fontWeight: FontWeight.bold),
                               ),
                             ],
@@ -769,7 +769,7 @@ if (_crops.isNotEmpty) {
                         
                         // Contract Amount
                         const Text(
-                          'Contract Amount (₹)',
+                          'Contract Amount (Rs)',
                           style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
                         ),
                         const SizedBox(height: 4),
@@ -803,7 +803,7 @@ if (_crops.isNotEmpty) {
                     borderRadius: BorderRadius.circular(12),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.05),
+                        color: Colors.black.withValues(alpha: 0.05),
                         blurRadius: 5,
                       ),
                     ],
@@ -857,7 +857,7 @@ if (_crops.isNotEmpty) {
                     borderRadius: BorderRadius.circular(12),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.05),
+                        color: Colors.black.withValues(alpha: 0.05),
                         blurRadius: 5,
                       ),
                     ],

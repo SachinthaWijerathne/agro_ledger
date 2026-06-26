@@ -37,7 +37,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   String _selectedTheme = 'light';
   
   // Notification Settings
-  bool _notificationsEnabled = true;
+  final bool _notificationsEnabled = true;
   bool _autoBackupEnabled = false;
 
   @override
@@ -547,7 +547,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                           );
                         }
                       },
-                      activeColor: const Color(0xFF2E7D32),
+                      activeThumbColor: const Color(0xFF2E7D32),
                     ),
                     if (_pinEnabled)
                       ListTile(
@@ -668,7 +668,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                       subtitle: const Text('Automatically backup data locally'),
                       value: _autoBackupEnabled,
                       onChanged: (v) => setState(() => _autoBackupEnabled = v),
-                      activeColor: const Color(0xFF2E7D32),
+                      activeThumbColor: const Color(0xFF2E7D32),
                     ),
                     const Divider(),
                     ListTile(
@@ -682,6 +682,58 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                 ),
               ),
             ),
+
+            const SizedBox(height: 16),
+
+            // ============================================
+            // ACCOUNT INFORMATION
+            // ============================================
+            _buildSectionHeader('Account', Icons.account_circle),
+            Card(
+              margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+              child: Padding(
+                padding: const EdgeInsets.all(12),
+                child: Column(
+                  children: [
+                    ListTile(
+                      leading: const Icon(Icons.logout, color: Colors.red),
+                      title: const Text('Logout', style: TextStyle(color: Colors.red)),
+                      onTap: () async {
+                        final confirmed = await showDialog<bool>(
+                          context: context,
+                          builder: (context) => AlertDialog(
+                            title: const Text('Logout'),
+                            content: const Text('Are you sure you want to logout?'),
+                            actions: [
+                              TextButton(
+                                onPressed: () => Navigator.pop(context, false),
+                                child: const Text('Cancel'),
+                              ),
+                              TextButton(
+                                onPressed: () => Navigator.pop(context, true),
+                                child: const Text('Logout', style: TextStyle(color: Colors.red)),
+                              ),
+                            ],
+                          ),
+                        );
+                        if (confirmed == true) {
+                          // Clear PIN and navigate to splash screen
+                          await _pinService.clearPin();
+                          if (mounted) {
+                            Navigator.pushNamedAndRemoveUntil(
+                              context,
+                              AppConstants.routeSplash,
+                              (route) => false,
+                            );
+                          }
+                        }
+                      },
+                    ),
+                  ],
+                ),
+              ),
+            ),
+
 
             const SizedBox(height: 16),
 

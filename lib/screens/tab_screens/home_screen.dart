@@ -124,11 +124,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           title: 'Welcome ${_userData?['name'] ?? 'Farmer'}',
           message:
               'Start by adding your first harvest or sale to see insights here.',
-          buttonText: 'Add Harvest',
-          icon: Icons.agriculture,
-          onPressed: () {
-            // Navigate to harvest tab
-          },
         ),
         floatingActionButton: FloatingActionButton.extended(
           onPressed: () {
@@ -221,7 +216,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   Expanded(
                     child: _buildSummaryCard(
                       title: 'Pending Payments',
-                      value: '₹${_totalPendingPayments.toStringAsFixed(0)}',
+                      value: 'Rs${_totalPendingPayments.toStringAsFixed(0)}',
                       icon: Icons.payment,
                       color: _totalPendingPayments > 0
                           ? Colors.red
@@ -238,7 +233,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       title: 'Low Stock Items',
                       value: _lowStockItems.length.toString(),
                       icon: Icons.warning_amber,
-                      color: _lowStockItems.length > 0
+                      color: _lowStockItems.isNotEmpty
                           ? Colors.orange
                           : Colors.green,
                     ),
@@ -247,7 +242,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   Expanded(
                     child: _buildSummaryCard(
                       title: 'Total Value',
-                      value: '₹${_totalStockValue.toStringAsFixed(0)}',
+                      value: 'Rs${_totalStockValue.toStringAsFixed(0)}',
                       icon: Icons.attach_money,
                       color: const Color(0xFF1565C0),
                     ),
@@ -291,7 +286,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     child: _buildAlertCard(
                       title: sale['dealer_name'] ?? 'Dealer',
                       message:
-                          '₹${(sale['total_amount'] as num?)?.toDouble() ?? 0} due',
+                          'Rs${(sale['total_amount'] as num?)?.toDouble() ?? 0} due',
                       icon: Icons.payment,
                       color: Colors.red,
                     ),
@@ -352,7 +347,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 10,
             offset: const Offset(0, 2),
           ),
@@ -366,7 +361,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               Container(
                 padding: const EdgeInsets.all(6),
                 decoration: BoxDecoration(
-                  color: color.withOpacity(0.1),
+                  color: color.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Icon(icon, size: 16, color: color),
@@ -400,14 +395,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: color.withOpacity(0.3)),
+        border: Border.all(color: color.withValues(alpha: 0.3)),
       ),
       child: Row(
         children: [
           Container(
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: color.withOpacity(0.1),
+              color: color.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(8),
             ),
             child: Icon(icon, color: color, size: 20),
@@ -438,7 +433,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
-          BoxShadow(color: Colors.black.withOpacity(0.03), blurRadius: 5),
+          BoxShadow(color: Colors.black.withValues(alpha: 0.03), blurRadius: 5),
         ],
       ),
       child: Row(

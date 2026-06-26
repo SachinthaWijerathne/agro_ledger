@@ -448,7 +448,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                   Expanded(
                     flex: 2,
                     child: DropdownButtonFormField<String>(
-                      value: _selectedCrop,
+                      initialValue: _selectedCrop,
                       decoration: const InputDecoration(
                         labelText: 'Crop Name',
                         contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
@@ -464,7 +464,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                   const SizedBox(width: 8),
                   Expanded(
                     child: DropdownButtonFormField<String>(
-                      value: _cropType,
+                      initialValue: _cropType,
                       decoration: const InputDecoration(
                         labelText: 'Type',
                         contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
@@ -558,7 +558,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
             children: [
               // Payment Method
               DropdownButtonFormField<String>(
-                value: _defaultPaymentMethod,
+                initialValue: _defaultPaymentMethod,
                 decoration: const InputDecoration(
                   labelText: 'Default Payment Method',
                   contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
@@ -566,8 +566,8 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                   isDense: true,
                 ),
                 items: const [
-                  DropdownMenuItem(value: 'per_kg', child: Text('Per Kilogram (₹/kg)')),
-                  DropdownMenuItem(value: 'per_day', child: Text('Per Day (₹/day)')),
+                  DropdownMenuItem(value: 'per_kg', child: Text('Per Kilogram (Rs/kg)')),
+                  DropdownMenuItem(value: 'per_day', child: Text('Per Day (Rs/day)')),
                 ],
                 onChanged: (v) => setState(() => _defaultPaymentMethod = v!),
               ),
@@ -578,7 +578,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                 TextFormField(
                   initialValue: _defaultPerKgRate.toString(),
                   decoration: const InputDecoration(
-                    labelText: 'Default Rate (₹/kg)',
+                    labelText: 'Default Rate (Rs/kg)',
                     prefixIcon: Icon(Icons.currency_rupee, size: 20),
                     suffixText: '/kg',
                     contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
@@ -592,7 +592,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                 TextFormField(
                   initialValue: _defaultDailyWage.toString(),
                   decoration: const InputDecoration(
-                    labelText: 'Default Daily Wage (₹/day)',
+                    labelText: 'Default Daily Wage (Rs/day)',
                     prefixIcon: Icon(Icons.currency_rupee, size: 20),
                     suffixText: '/day',
                     contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
@@ -608,7 +608,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
               TextFormField(
                 initialValue: _defaultTransportCost.toString(),
                 decoration: const InputDecoration(
-                  labelText: 'Default Transport Cost (₹)',
+                  labelText: 'Default Transport Cost (Rs)',
                   prefixIcon: Icon(Icons.local_taxi, size: 20),
                   contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                   border: OutlineInputBorder(),
@@ -663,8 +663,8 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
               const SizedBox(height: 8),
               _buildSummaryRow('Farm', _farmNameController.text.isNotEmpty ? _farmNameController.text : 'Not set'),
               _buildSummaryRow('Crops', _crops.isNotEmpty ? '${_crops.length} crops added' : 'No crops'),
-              _buildSummaryRow('Payment', _defaultPaymentMethod == 'per_kg' ? 'Per KG (₹$_defaultPerKgRate/kg)' : 'Per Day (₹$_defaultDailyWage/day)'),
-              _buildSummaryRow('Transport', '₹$_defaultTransportCost'),
+              _buildSummaryRow('Payment', _defaultPaymentMethod == 'per_kg' ? 'Per KG (Rs$_defaultPerKgRate/kg)' : 'Per Day (Rs$_defaultDailyWage/day)'),
+              _buildSummaryRow('Transport', 'Rs$_defaultTransportCost'),
             ],
           ),
         ),

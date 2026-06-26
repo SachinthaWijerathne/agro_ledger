@@ -1,6 +1,7 @@
 // lib/utils/helpers.dart
 import 'dart:math';
 import 'dart:convert';
+import 'package:intl/intl.dart';
 
 class Helpers {
   static String generateId() {
@@ -47,5 +48,21 @@ class Helpers {
     }
     // If no main crop found, return first crop
     return crops.isNotEmpty ? crops.first : null;
+  }
+
+   /// Format currency in Sri Lankan Rupees (Rs.)
+  static String formatCurrency(double amount) {
+    final format = NumberFormat.currency(
+      symbol: 'Rs. ',
+      decimalDigits: 0,
+      locale: 'si_LK', // Sri Lankan locale
+    );
+    return format.format(amount);
+  }
+  
+  /// Format currency without symbol (just number)
+  static String formatCurrencyNumber(double amount) {
+    final format = NumberFormat('#,##0', 'si_LK');
+    return format.format(amount);
   }
 }

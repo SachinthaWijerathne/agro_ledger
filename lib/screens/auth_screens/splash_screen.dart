@@ -82,16 +82,21 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
                   borderRadius: BorderRadius.circular(60),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.2),
+                      color: Colors.black.withValues(alpha: 0.2),
                       blurRadius: 20,
                       offset: const Offset(0, 10),
                     ),
                   ],
                 ),
-                child: const Icon(
-                  Icons.agriculture,
-                  size: 60,
-                  color: Color(0xFF2E7D32),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(60),
+                  child: Padding(
+                    padding: const EdgeInsets.all(20),
+                    child: Image.asset(
+                      'assets/logo/logo.png',
+                      fit: BoxFit.contain,
+                    ),
+                  ),
                 ),
               ),
               const SizedBox(height: 32),
@@ -107,20 +112,14 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
               const SizedBox(height: 8),
               const Text(
                 'Farm Management Simplified',
-                style: TextStyle(
-                  fontSize: 16,
-                  color: Colors.white70,
-                ),
+                style: TextStyle(fontSize: 16, color: Colors.white70),
               ),
               const SizedBox(height: 48),
               const CircularProgressIndicator(
                 valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
               ),
               const SizedBox(height: 16),
-              const Text(
-                'Loading...',
-                style: TextStyle(color: Colors.white70),
-              ),
+              const Text('Loading...', style: TextStyle(color: Colors.white70)),
             ],
           ),
         ),

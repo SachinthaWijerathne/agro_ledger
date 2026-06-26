@@ -1,7 +1,6 @@
 // lib/screens/add_entry_screen.dart
 import 'package:agro_ledger/screens/misc/add_maintenance_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'add_harvest_screen.dart';
 
 class AddEntryScreen extends StatelessWidget {
@@ -110,7 +109,7 @@ class AddEntryScreen extends StatelessWidget {
                 width: 56,
                 height: 56,
                 decoration: BoxDecoration(
-                  color: color.withOpacity(0.1),
+                  color: color.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(14),
                 ),
                 child: Icon(icon, size: 28, color: color),

@@ -1,4 +1,5 @@
 // lib/screens/add_harvest_screen.dart
+import 'package:agro_ledger/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:agro_ledger/utils/helpers.dart';
@@ -43,9 +44,9 @@ OverlayEntry? _suggestionsOverlay;
   List<Map<String, dynamic>> _tempHarvestWorkers = [];
 
   // Current entry being added
-  String _workerNameInput = '';
+  final String _workerNameInput = '';
   String _selectedWorkerId = '';
-  double _workerQuantity = 0.0;
+  final double _workerQuantity = 0.0;
   String _selectedPaymentMethod = 'per_kg';
   double _ratePerKg = 5.0;
   double _dailyWage = 300.0;
@@ -227,7 +228,7 @@ void _showSuggestionsOverlay() {
                 dense: true,
                 leading: CircleAvatar(
                   radius: 14,
-                  backgroundColor: const Color(0xFF2E7D32).withOpacity(0.1),
+                  backgroundColor: const Color(0xFF2E7D32).withValues(alpha: 0.1),
                   child: Text(
                     (worker['name'] as String).substring(0, 1).toUpperCase(),
                     style: const TextStyle(
@@ -655,6 +656,18 @@ void _selectSuggestion(Map<String, dynamic> worker) {
         });
       }
 
+      for(var worker in _tempHarvestWorkers) {
+        await localStorage.insertWorker(  {
+          'worker_id': worker['worker_id'],
+          'farm_id': _farmId,
+          'name': worker['name'],
+          'nick_name': worker['nick_name'] ?? '',
+          'is_active': 1,
+          'created_at': DateTime.now().toIso8601String(),
+          'updated_at': DateTime.now().toIso8601String(),
+        });
+      }
+
       // Save all harvest workers
       for (var worker in _tempHarvestWorkers) {
         await localStorage.insertHarvestWorker({
@@ -701,7 +714,7 @@ void _selectSuggestion(Map<String, dynamic> worker) {
         );
 
         Future.delayed(const Duration(milliseconds: 500), () {
-          if (mounted) Navigator.pop(context);
+          if (mounted) Navigator.popAndPushNamed(context, AppConstants.routeHome);
         });
       }
     } catch (e) {
@@ -854,7 +867,7 @@ void _selectSuggestion(Map<String, dynamic> worker) {
                                 borderRadius: BorderRadius.circular(12),
                                 boxShadow: [
                                   BoxShadow(
-                                    color: Colors.black.withOpacity(0.05),
+                                    color: Colors.black.withValues(alpha: 0.05),
                                     blurRadius: 5,
                                   ),
                                 ],
@@ -921,7 +934,7 @@ void _selectSuggestion(Map<String, dynamic> worker) {
                                 borderRadius: BorderRadius.circular(12),
                                 boxShadow: [
                                   BoxShadow(
-                                    color: Colors.black.withOpacity(0.05),
+                                    color: Colors.black.withValues(alpha: 0.05),
                                     blurRadius: 5,
                                   ),
                                 ],
@@ -1014,7 +1027,7 @@ void _selectSuggestion(Map<String, dynamic> worker) {
                                                         ),
                                                       ),
                                                       Text(
-                                                        '${worker['quantity']} kg • ₹${worker['earnings']}',
+                                                        '${worker['quantity']} kg • Rs${worker['earnings']}',
                                                         style: const TextStyle(
                                                           fontSize: 11,
                                                           color: Colors.grey,
@@ -1152,8 +1165,8 @@ void _selectSuggestion(Map<String, dynamic> worker) {
                                                         boxShadow: [
                                                           BoxShadow(
                                                             color: Colors.black
-                                                                .withOpacity(
-                                                                  0.2,
+                                                                .withValues(
+                                                                  alpha: 0.2,
                                                                 ),
                                                             blurRadius: 15,
                                                             offset:
@@ -1185,8 +1198,8 @@ void _selectSuggestion(Map<String, dynamic> worker) {
                                                               backgroundColor:
                                                                   const Color(
                                                                     0xFF2E7D32,
-                                                                  ).withOpacity(
-                                                                    0.1,
+                                                                  ).withValues(
+                                                                    alpha: 0.1,
                                                                   ),
                                                               child: Text(
                                                                 (worker['name']
@@ -1302,8 +1315,8 @@ void _selectSuggestion(Map<String, dynamic> worker) {
                                         ),
                                         child: Text(
                                           _selectedPaymentMethod == 'per_kg'
-                                              ? '₹$_ratePerKg/kg'
-                                              : '₹$_dailyWage/day',
+                                              ? 'Rs$_ratePerKg/kg'
+                                              : 'Rs$_dailyWage/day',
                                           style: TextStyle(
                                             fontSize: 11,
                                             fontWeight: FontWeight.w500,
@@ -1359,7 +1372,7 @@ void _selectSuggestion(Map<String, dynamic> worker) {
                                         child: TextField(
                                           decoration: const InputDecoration(
                                             labelText: 'Transport',
-                                            hintText: '₹',
+                                            hintText: 'Rs',
                                             border: OutlineInputBorder(),
                                             contentPadding:
                                                 EdgeInsets.symmetric(
@@ -1479,7 +1492,7 @@ void _selectSuggestion(Map<String, dynamic> worker) {
                                         ),
                                       ),
                                       Text(
-                                        '₹${_totalLaborCost.toStringAsFixed(0)}',
+                                        'Rs${_totalLaborCost.toStringAsFixed(0)}',
                                         style: const TextStyle(
                                           fontSize: 18,
                                           fontWeight: FontWeight.bold,

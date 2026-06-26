@@ -1,10 +1,8 @@
 // lib/database/local_storage_service.dart
-import 'dart:io';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:flutter/foundation.dart';
 import '../utils/constants.dart';
-import '../utils/helpers.dart';
 
 class LocalStorageService {
   static LocalStorageService? _instance;
@@ -128,7 +126,7 @@ class LocalStorageService {
   worker_id TEXT PRIMARY KEY NOT NULL,
   farm_id TEXT NOT NULL,
   name TEXT NOT NULL,
-  nick_name TEXT,
+  nick_name TEXT NOT NULL,
   gender TEXT CHECK(gender IN ('male', 'female', 'other')),
   phone TEXT,
   address TEXT,
@@ -207,20 +205,22 @@ class LocalStorageService {
     // 9. HARVEST WORKERS
     await db.execute('''
       CREATE TABLE harvest_workers (
-        id TEXT PRIMARY KEY NOT NULL,
-        harvest_id TEXT NOT NULL,
-        worker_id TEXT NOT NULL,
-        quantity_harvested REAL,
-        earnings REAL,
-        payment_method TEXT CHECK(payment_method IN ('per_kg', 'per_day')),
-        rate REAL,
-        transport_cost REAL DEFAULT 0,
-        created_at TEXT NOT NULL,
-        updated_at TEXT NOT NULL,
-        FOREIGN KEY (harvest_id) REFERENCES harvests(harvest_id) ON DELETE CASCADE,
-        FOREIGN KEY (worker_id) REFERENCES workers(worker_id) ON DELETE CASCADE,
-        UNIQUE(harvest_id, worker_id)
-      )
+  id TEXT PRIMARY KEY NOT NULL,
+  harvest_id TEXT NOT NULL,
+  worker_id TEXT NOT NULL,
+  quantity_harvested REAL,
+  earnings REAL,
+  payment_method TEXT CHECK(payment_method IN ('per_kg', 'per_day')),
+  rate REAL,
+  transport_cost REAL DEFAULT 0,
+  is_paid INTEGER DEFAULT 0,
+  paid_date TEXT,
+  created_at TEXT NOT NULL,
+  updated_at TEXT NOT NULL,
+  FOREIGN KEY (harvest_id) REFERENCES harvests(harvest_id) ON DELETE CASCADE,
+  FOREIGN KEY (worker_id) REFERENCES workers(worker_id) ON DELETE CASCADE,
+  UNIQUE(harvest_id, worker_id)
+)
     ''');
     debugPrint('✅ harvest_workers table created');
 
@@ -1132,15 +1132,19 @@ class LocalStorageService {
   // ============================================
 
   Future<void> insertHarvestWorker(Map<String, dynamic> data) async {
-    final db = await database;
-    data['created_at'] = DateTime.now().toIso8601String();
-    data['updated_at'] = DateTime.now().toIso8601String();
-    await db.insert(
-      'harvest_workers',
-      data,
-      conflictAlgorithm: ConflictAlgorithm.replace,
-    );
+  final db = await database;
+  // Ensure is_paid exists
+  if (!data.containsKey('is_paid')) {
+    data['is_paid'] = 0;
   }
+  if (!data.containsKey('created_at')) {
+    data['created_at'] = DateTime.now().toIso8601String();
+  }
+  if (!data.containsKey('updated_at')) {
+    data['updated_at'] = DateTime.now().toIso8601String();
+  }
+  await db.insert('harvest_workers', data, conflictAlgorithm: ConflictAlgorithm.replace);
+}
 
   Future<List<Map<String, dynamic>>> getHarvestWorkersByHarvest(
     String harvestId,
